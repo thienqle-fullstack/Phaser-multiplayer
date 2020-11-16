@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const maze = require('./maze')
+// const maze = require('./maze')
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 //Run a http listen instead of express
 http.listen(PORT,() => `Server is listening on ${PORT}`);
 
-data =maze.mazeGenerator(64,64,1,1,63,63);
+// data =maze.mazeGenerator(64,64,1,1,63,63);
 // fs = require('fs');
 // fs.writeFile('map.csv', JSON.stringify(data), function (err) {
 //       if (err) return console.log(err);

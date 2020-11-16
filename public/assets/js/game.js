@@ -36,7 +36,7 @@ const MAP_HEIGHT = 50;
 let playerSprite;
 let enemySprite;
 let physics; //Catch local physic
-
+let camera;
 //For the connection
 var socket;
 
@@ -97,7 +97,7 @@ function create ()
     /* END MAP PART */
 
     /* START CAMERA */
-    const camera = this.cameras.main;
+    camera = this.cameras.main;
     cursor = this.input.keyboard.createCursorKeys(); //cursor is key
     controls = new Phaser.Cameras.Controls.FixedKeyControl({
         camera: camera,
@@ -108,6 +108,7 @@ function create ()
         speed:0.5
     })
     camera.setBounds(0,0,map.widthInPixels,map.heightInPixels);
+    console.log(camera)
     // camera.roundPixels = true; //problem with tile edges
     /* END CAMERA */
 
@@ -134,6 +135,14 @@ function create ()
         // backgroundColor: "#000000"
     })
     .setScrollFactor(0);
+
+    //Try to add text on top of player (does not work)
+    // playerName = this.add.text(player.x-unitSize/2,player.y-unitSize,"P1", {
+    //     font: "11px monospace",
+    //     fill: "#00ff00",
+    //     padding: {x:0,y:0},
+    // })
+    // .setScrollFactor(0);
     /* END TEXT/SCORE BOARD */
 
     /* LISTEN FROM SERVER*/ 
@@ -187,26 +196,32 @@ function update (time,delta)
     player.body.setVelocity(0);
     if(cursor.up.isDown){
         player.body.setVelocityY(-speed);
+        socket.emit('playerMoved', { x: player.x, y: player.y})
         // player.anims.play('down', true)
     } else if (cursor.down.isDown){
         player.body.setVelocityY(speed);
+        socket.emit('playerMoved', { x: player.x, y: player.y})
         // player.anims.play('up', true)
     } else if(cursor.left.isDown){
         player.body.setVelocityX(-speed);
+        socket.emit('playerMoved', { x: player.x, y: player.y})
         // player.anims.play('left', true)
         ///player.flipX = true; //Flip the sprite when turning left, because original image only on right side
     } else if (cursor.right.isDown) {
         player.body.setVelocityX(speed);
+        socket.emit('playerMoved', { x: player.x, y: player.y})
         // player.anims.play('right', true)
         //player.flipX = false;
     } else {
         // player.anims.play('idle', true)
     }
+    // playerName.x = player.body.position.x-unitSize/2;
+    // playerName.y = player.body.position.y-unitSize;
 
     // console.log(player.x);
     // console.log(player.y);
     // Send data to server
-    socket.emit('playerMoved', { x: player.x, y: player.y})
+    // socket.emit('playerMoved', { x: player.x, y: player.y})
     
     //Update enemy
 
